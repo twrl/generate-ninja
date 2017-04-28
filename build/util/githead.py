@@ -5,7 +5,7 @@ from sys import argv, stderr
 
 #dirname =
 parts =  os.path.dirname(argv[1]).rpartition(".git")
-print parts >> stderr
+#print parts >> stderr
 
 if os.path.isfile(parts[0] + parts[1]):
   g = open(parts[0] + parts[1], 'r')
