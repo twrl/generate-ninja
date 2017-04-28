@@ -2,6 +2,15 @@ language: cpp
 
 sudo: false
 
+addons:
+  apt:
+    sources:
+    - sourceline: "ppa:ubuntu-toolchain-r/test"
+    packages:
+    - gcc-4.9
+    - g++-4.9
+    - ninja-build
+
 matrix:
   include:
     - os: linux
@@ -9,8 +18,8 @@ matrix:
         - system="x86_64"
 
 
-before_install:
-  - source .travis/setenv.sh
+#before_install:
+#  - source .travis/setenv.sh
 
 script: make
 
