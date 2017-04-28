@@ -5,7 +5,7 @@ from sys import argv, stderr
 
 #dirname =
 parts =  os.path.dirname(argv[1]).rpartition(".git")
-#print parts >> stderr
+print >> stderr, parts
 
 if os.path.isfile(parts[0] + parts[1]):
   g = open(parts[0] + parts[1], 'r')
@@ -21,8 +21,8 @@ else:
   headfile = argv[1]
   dirname = os.path.dirname(headfile)
 
-print "headfile: " + headfile >> stderr
-print "gitdir: " + dirname >> stderr
+print >> stderr, "headfile: " + headfile
+print >> stderr, "gitdir: " + dirname
 
 
 f = open(headfile, 'r')
