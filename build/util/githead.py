@@ -4,7 +4,7 @@ import re
 from sys import argv
 
 #dirname =
-parts =  os.path.dirname(argv[1]).partition(".git")
+parts =  os.path.dirname(argv[1]).rpartition(".git")
 if os.path.isfile(parts[0] + parts[1]):
   g = open(parts[0] + parts[1], 'r')
   gitdir = g.readline()
