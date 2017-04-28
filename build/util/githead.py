@@ -17,7 +17,7 @@ if os.path.isfile(parts[0] + parts[1]):
   else:
     dirname = os.path.normpath(os.path.join(parts[0], gitdir))
   headfile = os.path.normpath(dirname + parts[2])
-else
+else:
   headfile = argv[1]
   dirname = os.path.dirname(headfile)
 
