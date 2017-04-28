@@ -9,15 +9,15 @@ print >> stderr, parts
 
 if os.path.isfile(parts[0] + parts[1]):
   g = open(parts[0] + parts[1], 'r')
-  gitdir = g.readline()
+  gf = g.readline()
   g.close()
-  gmatch = re.match('gitdir: (.*)', gitdir)
-  if os.path.isabs(gmatch.group(1)):
-    dirname = gmatch.group(1)
+  gitdir = re.match('gitdir: (.*)', gf).group(1)
+  if os.path.isabs(gitdir):
+    dirname = gitdir
   else:
-    dirname = os.path.normpath(os.path.join(parts[0], gmatch.group(1)))
-  headfile = os.path.join(dirname, './' + parts[2])
-else:
+    dirname = os.path.normpath(os.path.join(parts[0], gitdir))
+  headfile = os.path.normpath(dirname + parts[2])
+else
   headfile = argv[1]
   dirname = os.path.dirname(headfile)
 
