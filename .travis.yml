@@ -25,7 +25,7 @@ matrix:
 #before_install:
 #  - source .travis/setenv.sh
 
-script: make
+script: env CC=gcc-4.9 CXX=g++-4.9 make
 
 branches:
   only:
