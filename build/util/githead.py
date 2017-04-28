@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 import os
 import re
-from sys import argv
+from sys import argv, stderr
 
 #dirname =
 parts =  os.path.dirname(argv[1]).rpartition(".git")
-print parts >> sys.stderr
+print parts >> stderr
 
 if os.path.isfile(parts[0] + parts[1]):
   g = open(parts[0] + parts[1], 'r')
@@ -21,8 +21,8 @@ else:
   headfile = argv[1]
   dirname = os.path.dirname(headfile)
 
-print "headfile: " + headfile >> sys.stderr
-print "gitdir: " + dirname >> sys.stderr
+print "headfile: " + headfile >> stderr
+print "gitdir: " + dirname >> stderr
 
 
 f = open(headfile, 'r')
