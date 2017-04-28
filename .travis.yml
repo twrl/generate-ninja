@@ -6,10 +6,10 @@ dist: trusty
 addons:
   apt:
     sources:
-    - sourceline: "ppa:ubuntu-toolchain-r/test"
+    - ubuntu-toolchain-r-test
     packages:
-    - gcc-6
-    - g++-6
+    - gcc-5
+    - g++-5
     - build-essential
     - ninja-build
 
@@ -25,7 +25,7 @@ matrix:
 #before_install:
 #  - source .travis/setenv.sh
 
-script: env CC=gcc-6 CXX=g++-6 make
+script: env CC=gcc-5 CXX=g++-5 make
 
 branches:
   only:
