@@ -6,6 +6,7 @@ from sys import argv
 #dirname =
 parts =  os.path.dirname(argv[1]).rpartition(".git")
 print parts
+
 if os.path.isfile(parts[0] + parts[1]):
   g = open(parts[0] + parts[1], 'r')
   gitdir = g.readline()
