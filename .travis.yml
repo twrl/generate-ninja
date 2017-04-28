@@ -1,14 +1,16 @@
 language: cpp
 
 sudo: false
+dist: trusty 
 
 addons:
   apt:
     sources:
     - sourceline: "ppa:ubuntu-toolchain-r/test"
     packages:
-    - gcc-4.9
-    - g++-4.9
+    - gcc
+    - g++
+    - build-essential
     - ninja-build
 
 matrix:
