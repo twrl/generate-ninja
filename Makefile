@@ -24,7 +24,7 @@ out/Release/build.ninja: out_bootstrap/gn Makefile
 build.ninja: out/Release/build.ninja
 
 out/Release/gn: build.ninja
-	@ninja -v -C out/Release gn
+	@ninja -C out/Release gn
 
 .PHONY: gn
 gn: out/Release/gn
