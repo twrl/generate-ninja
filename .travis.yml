@@ -23,7 +23,12 @@ matrix:
 #before_install:
 #  - source .travis/setenv.sh
 
-script: env CC=clang-4.0 CXX=clang++-4.0 make
+before_script:
+  - mkdir -p $HOME/toolchain
+  - ln -s `which clang-4.0` $HOME/toolchain/gcc
+  - ln -s `which clang++-4.0` $HOME/toolchain/g++
+  - export PATH=$HOME/toolchain:$PATH
+script: make
 
 branches:
   only:
