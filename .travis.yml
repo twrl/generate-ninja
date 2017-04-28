@@ -7,6 +7,7 @@ addons:
   apt:
     sources:
     - llvm-toolchain-trusty-4.0
+    - sourceline: "ppa:ricotz/toolchain"
     packages:
     - clang-4.0
     - build-essential
