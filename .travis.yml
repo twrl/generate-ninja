@@ -6,10 +6,9 @@ dist: trusty
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
+    - llvm-toolchain-trusty-4.0
     packages:
-    - gcc-5
-    - g++-5
+    - clang-4.0
     - build-essential
     - ninja-build
 
@@ -18,14 +17,12 @@ matrix:
     - os: linux
       env:
         - system="x86_64"
-        - CC=gcc-4.9
-        - CXX=g++-4.9
 
 
 #before_install:
 #  - source .travis/setenv.sh
 
-script: env CC=gcc-5 CXX=g++-5 make
+script: env CC=clang-4.0 CXX=clang++-4.0 make
 
 branches:
   only:
