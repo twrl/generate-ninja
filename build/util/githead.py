@@ -4,7 +4,7 @@ import re
 from sys import argv, stderr
 
 #dirname =
-parts =  argv[1].rpartition("/.git")
+parts =  os.path.normpath(argv[1]).rpartition(".git")
 print >> stderr, parts
 
 if os.path.isfile(parts[0] + parts[1]):
