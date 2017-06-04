@@ -41,6 +41,7 @@ static_library("gn_lib") {
     "command_clean.cc",
     "command_desc.cc",
     "command_format.cc",
+    "command_format.h",
     "command_gen.cc",
     "command_help.cc",
     "command_ls.cc",
@@ -242,7 +243,7 @@ action("last_commit_position") {
   version = getenv("GN_VERSION")
   if (version == "") {
     head = exec_script("//build/util/githead.py",
-                       [ rebase_path("//.git/HEAD") ],
+                       [ rebase_path("//.git/HEAD", root_build_dir) ],
                        "trim string",
                        ["//.git/HEAD"])
     # This dependency forces a re-run when the code is synced.
@@ -278,6 +279,8 @@ action("last_commit_position") {
 # of GN over the large Chrome build, you will want to set the arg:
 #   enable_iterator_debugging = false
 executable("gn") {
+  configs += [ "//build/config/gn:executable_config" ]
+
   sources = [
     "gn_main.cc",
   ]
@@ -286,7 +289,7 @@ executable("gn") {
     ":gn_lib",
     ":last_commit_position",
     "//base",
-    "//build/config/sanitizers:deps",
+    "//build/config:exe_and_shlib_deps",
     "//build/win:default_exe_manifest",
   ]
 }

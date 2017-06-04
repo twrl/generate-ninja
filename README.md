@@ -30,16 +30,18 @@ with the following files/directories exported directly via `git archive`:
  - testing/\*.mm
  - third\_party/apple\_apsl
  - third\_party/ced
+ - third\_party/googletest
  - third\_party/libxml
  - third\_party/modp\_b64
  - third\_party/zlib
 
-and the following git submodules exported into their respective directories:
+and the following git sub-repos exported into their respective directories:
 
  - testing/gmock
  - testing/gtest
  - third\_party/ced/src
  - third\_party/icu
+ - third\_party/googletest/src
 
 Furthermore, this fork adds some minor features as well as some bug fixes:
 
@@ -63,7 +65,8 @@ Furthermore, this fork adds some minor features as well as some bug fixes:
  - Support specifying tool source file extentions
  - Support specifying object file extentions
  - Support specifying linker script extentions
- - Support custom intepreter for action scripts and exec scripts
+ - Support custom interpreter for action scripts and exec scripts
+ - Support custom interpreter for JSON IDE scripts
  - Support `--all-toolchains` option for QtCreator generator
  - Add `define_switch` and `include_switch` variables to toolchain function
  - Add `color_console` built-in variable

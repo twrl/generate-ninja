@@ -29,6 +29,7 @@ namespace commands {
 namespace {
 
 const char kSwitchCheck[] = "check";
+const char kSwitchEnvlog[] = "envlog";
 const char kSwitchFilters[] = "filters";
 const char kSwitchIde[] = "ide";
 const char kSwitchIdeValueEclipse[] = "eclipse";
@@ -47,6 +48,7 @@ const char kSwitchWorkspace[] = "workspace";
 const char kSwitchJsonFileName[] = "json-file-name";
 const char kSwitchJsonIdeScript[] = "json-ide-script";
 const char kSwitchJsonIdeScriptArgs[] = "json-ide-script-args";
+const char kSwitchJsonIdeScriptInterpreter[] = "json-ide-script-interpreter";
 
 // Collects Ninja rules for each toolchain. The lock protectes the rules.
 struct TargetWriteInfo {
@@ -251,10 +253,12 @@ bool RunIdeWriter(const std::string& ide,
         command_line->GetSwitchValueASCII(kSwitchJsonIdeScript);
     std::string exec_script_extra_args =
         command_line->GetSwitchValueASCII(kSwitchJsonIdeScriptArgs);
+    base::FilePath exec_script_interpreter =
+        command_line->GetSwitchValuePath(kSwitchJsonIdeScriptInterpreter);
     std::string filters = command_line->GetSwitchValueASCII(kSwitchFilters);
 
     bool res = JSONProjectWriter::RunAndWriteFiles(
-        build_settings, builder, file_name, exec_script, exec_script_extra_args,
+        build_settings, builder, file_name, exec_script_interpreter, exec_script, exec_script_extra_args,
         filters, quiet, err);
     if (res && !quiet) {
       OutputString("Generating JSON projects took " +
@@ -275,7 +279,7 @@ const char kGen_HelpShort[] = "gen: Generate ninja files.";
 const char kGen_Help[] =
     R"(gn gen: Generate ninja files.
 
-  gn gen [<ide options>] <out_dir>
+  gn gen [--check] [--envlog=<file_name>] [<ide options>] <out_dir>
 
   Generates ninja files from the current tree and puts them in the given output
   directory.
@@ -285,7 +289,17 @@ const char kGen_Help[] =
   Or it can be a directory relative to the current directory such as:
       out/foo
 
+  "gn gen --check" is the same as running "gn check". See "gn help check"
+  for documentation on that mode.
+
   See "gn help switches" for the common command-line switches.
+
+Options
+
+  --envlog=<file_name>
+      Writes a list of environment variables to the given file. The env log
+      will show a list of environment variables referenced in gn files as
+      well as their values.
 
 IDE options
 
@@ -359,21 +373,25 @@ Eclipse IDE Support
 
 Generic JSON Output
 
-  Dumps target information to JSON file and optionally invokes python script on
-  generated file. See comments at the beginning of json_project_writer.cc and
-  desc_builder.cc for overview of JSON file format.
+  Dumps target information to a JSON file and optionally invokes a script on
+  the generated file. See comments at the beginning of json_project_writer.cc
+  and desc_builder.cc for an overview of the JSON file format.
 
   --json-file-name=<json_file_name>
       Overrides default file name (project.json) of generated JSON file.
 
-  --json-ide-script=<path_to_python_script>
-      Executes python script after the JSON file is generated. Path can be
+  --json-ide-script=<path_to_script>
+      Executes this script after the JSON file is generated. Path can be
       project absolute (//), system absolute (/) or relative, in which case the
       output directory will be base. Path to generated JSON file will be first
       argument when invoking script.
 
   --json-ide-script-args=<argument>
       Optional second argument that will passed to executed script.
+
+  --json-ide-script-interpreter=<interpreter>
+      Interpreter to use to execute the script. If unspecified, the default
+      Python interpreter is used.
 )";
 
 int RunGen(const std::vector<std::string>& args) {
@@ -386,13 +404,16 @@ int RunGen(const std::vector<std::string>& args) {
     return 1;
   }
 
+  const base::CommandLine* command_line =
+      base::CommandLine::ForCurrentProcess();
+  bool env_logging = command_line->HasSwitch(kSwitchEnvlog);
+
   // Deliberately leaked to avoid expensive process teardown.
   Setup* setup = new Setup();
+  setup->scheduler().set_env_logging(env_logging);
   if (!setup->DoSetup(args[0], true))
     return 1;
 
-  const base::CommandLine* command_line =
-      base::CommandLine::ForCurrentProcess();
   if (command_line->HasSwitch(kSwitchCheck))
     setup->set_check_public_headers(true);
 
@@ -423,6 +444,14 @@ int RunGen(const std::vector<std::string>& args) {
                                      &err)) {
     err.PrintToStdout();
     return 1;
+  }
+
+  if (env_logging) {
+    std::string file_name = command_line->GetSwitchValueASCII(kSwitchEnvlog);
+    SourceFile envlog = setup->build_settings().build_dir().ResolveRelativeFile(
+        Value(nullptr, file_name), &err);
+    base::FilePath envlog_path = setup->build_settings().GetFullPath(envlog);
+    setup->scheduler().SaveEnvLog(envlog_path);
   }
 
   if (!WriteRuntimeDepsFilesIfNecessary(setup->builder(), &err)) {

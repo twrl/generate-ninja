@@ -13,6 +13,7 @@ group("posix") {
   visibility = [ "//:optimize_gn_gen" ]
 }
 
+<<<<<<< HEAD
 # This is included by reference in the //build/config/compiler config that
 # is applied to all Posix targets. It is here to separate out the logic that is
 # Posix-only. Note that this is in addition to an OS-specific variant of this
@@ -24,6 +25,8 @@ config("compiler") {
   }
 }
 
+=======
+>>>>>>> fe03dcc54a5dd3b43bc67f2caa3423a4ff19c126
 # This is included by reference in the //build/config/compiler:runtime_library
 # config that is applied to all targets. It is here to separate out the logic
 # that is Posix-only. Please see that target for advice on what should go in
